@@ -1,0 +1,89 @@
+{
+  "indices": {
+    "S&P 500": {
+      "symbol": "SPX",
+      "name": "S&P 500",
+      "current_price": 4847.88,
+      "change": 12.45,
+      "change_percent": 0.26,
+      "volume": "2.5B",
+      "52_week_high": 4818.62,
+      "52_week_low": 3491.58,
+      "market_cap": "39.1T",
+      "timestamp": "2024-01-15T14:30:00Z"
+    },
+    "NASDAQ": {
+      "symbol": "IXIC",
+      "name": "NASDAQ Composite",
+      "current_price": 15181.92,
+      "change": 89.76,
+      "change_percent": 0.59,
+      "volume": "3.2B",
+      "52_week_high": 16057.44,
+      "52_week_low": 10088.83,
+      "market_cap": "18.7T",
+      "timestamp": "2024-01-15T14:30:00Z"
+    },
+    "DOW": {
+      "symbol": "DJI",
+      "name": "Dow Jones Industrial Average",
+      "current_price": 37753.31,
+      "change": -45.22,
+      "change_percent": -0.12,
+      "volume": "1.8B",
+      "52_week_high": 37952.54,
+      "52_week_low": 28660.94,
+      "market_cap": "13.2T",
+      "timestamp": "2024-01-15T14:30:00Z"
+    },
+    "RUSSELL 2000": {
+      "symbol": "RUT",
+      "name": "Russell 2000",
+      "current_price": 2089.44,
+      "change": 5.33,
+      "change_percent": 0.26,
+      "volume": "1.2B",
+      "52_week_high": 2442.74,
+      "52_week_low": 1636.93,
+      "market_cap": "1.4T",
+      "timestamp": "2024-01-15T14:30:00Z"
+    },
+    "VIX": {
+      "symbol": "VIX",
+      "name": "CBOE Volatility Index",
+      "current_price": 13.22,
+      "change": -0.87,
+      "change_percent": -6.17,
+      "volume": "800M",
+      "52_week_high": 65.73,
+      "52_week_low": 12.07,
+      "market_cap": "N/A",
+      "timestamp": "2024-01-15T14:30:00Z"
+    }
+  },
+  "market_sentiment": {
+    "fear_greed_index": 65,
+    "vix_level": 13.22,
+    "put_call_ratio": 0.85,
+    "insider_buying": "Moderate",
+    "analyst_sentiment": "Bullish",
+    "market_breadth": {
+      "advancing_stocks": 2450,
+      "declining_stocks": 1650,
+      "unchanged_stocks": 300
+    }
+  },
+  "economic_indicators": {
+    "fed_funds_rate": 5.25,
+    "10_year_treasury": 4.325,
+    "unemployment_rate": 3.7,
+    "inflation_rate": 3.2,
+    "gdp_growth": 2.4
+  },
+  "metadata": {
+    "generated_at": "2024-01-15T14:30:00Z",
+    "data_source": "synthetic",
+    "update_frequency": "real-time",
+    "coverage": "US Markets"
+  }
+}

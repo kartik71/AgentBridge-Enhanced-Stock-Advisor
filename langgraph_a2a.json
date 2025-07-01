@@ -1,0 +1,177 @@
+{
+  "name": "Stock Advisor A2A Communication System",
+  "description": "Enhanced LangGraph agents with Agent-to-Agent communication for stock analysis",
+  "version": "2.0.0",
+  "agents": {
+    "enhanced_portfolio_optimizer": {
+      "name": "Enhanced Portfolio Optimizer",
+      "description": "Portfolio optimization with A2A communication to other agents",
+      "type": "coordinator",
+      "a2a_connections": [
+        {
+          "target": "index_scraper_agent",
+          "purpose": "real_time_market_data",
+          "data_flow": "inbound",
+          "enabled": true
+        },
+        {
+          "target": "timing_advisor_agent", 
+          "purpose": "market_timing_analysis",
+          "data_flow": "inbound",
+          "enabled": true
+        },
+        {
+          "target": "compliance_logger_agent",
+          "purpose": "compliance_validation",
+          "data_flow": "bidirectional",
+          "enabled": true
+        }
+      ],
+      "workflow": {
+        "entry_point": "validate_inputs",
+        "nodes": [
+          "validate_inputs",
+          "query_market_data",
+          "analyze_timing", 
+          "generate_portfolio",
+          "check_compliance",
+          "finalize_recommendations"
+        ],
+        "conditional_edges": [
+          {
+            "from": "validate_inputs",
+            "condition": "_should_use_a2a",
+            "branches": {
+              "use_a2a": "query_market_data",
+              "skip_a2a": "generate_portfolio"
+            }
+          }
+        ]
+      }
+    },
+    "index_scraper_agent": {
+      "name": "Index Scraper Agent",
+      "description": "Provides real-time market data to other agents",
+      "type": "data_provider",
+      "a2a_connections": [
+        {
+          "target": "enhanced_portfolio_optimizer",
+          "purpose": "market_data_feed",
+          "data_flow": "outbound",
+          "enabled": true
+        }
+      ]
+    },
+    "timing_advisor_agent": {
+      "name": "Timing Advisor Agent", 
+      "description": "Provides market timing analysis to portfolio optimizer",
+      "type": "analyzer",
+      "a2a_connections": [
+        {
+          "target": "enhanced_portfolio_optimizer",
+          "purpose": "timing_recommendations",
+          "data_flow": "outbound",
+          "enabled": true
+        }
+      ]
+    },
+    "compliance_logger_agent": {
+      "name": "Compliance Logger Agent",
+      "description": "Validates compliance and provides feedback",
+      "type": "validator",
+      "a2a_connections": [
+        {
+          "target": "enhanced_portfolio_optimizer",
+          "purpose": "compliance_feedback",
+          "data_flow": "bidirectional",
+          "enabled": true
+        }
+      ]
+    }
+  },
+  "a2a_communication": {
+    "enabled": true,
+    "protocol": "direct_method_calls",
+    "data_formats": {
+      "market_data": {
+        "schema": "MarketDataSchema",
+        "fields": ["indices", "sentiment", "historical_data"]
+      },
+      "timing_analysis": {
+        "schema": "TimingAnalysisSchema", 
+        "fields": ["signals", "regime", "recommendations"]
+      },
+      "compliance_check": {
+        "schema": "ComplianceSchema",
+        "fields": ["violations", "score", "recommendations"]
+      }
+    },
+    "communication_flows": [
+      {
+        "name": "Portfolio Optimization Flow",
+        "description": "Sequential A2A communication for portfolio optimization",
+        "steps": [
+          {
+            "step": 1,
+            "from": "enhanced_portfolio_optimizer",
+            "to": "index_scraper_agent",
+            "action": "query_market_data",
+            "data": "current_indices_and_sentiment"
+          },
+          {
+            "step": 2,
+            "from": "enhanced_portfolio_optimizer", 
+            "to": "timing_advisor_agent",
+            "action": "analyze_timing",
+            "data": "market_conditions_and_timeframe"
+          },
+          {
+            "step": 3,
+            "from": "enhanced_portfolio_optimizer",
+            "to": "compliance_logger_agent", 
+            "action": "check_compliance",
+            "data": "portfolio_recommendations"
+          }
+        ]
+      }
+    ],
+    "performance_metrics": {
+      "latency_target": "< 200ms",
+      "success_rate_target": "> 95%",
+      "data_quality_target": "> 90%"
+    }
+  },
+  "ui_controls": {
+    "a2a_master_toggle": {
+      "description": "Enable/disable all A2A communication",
+      "default": true,
+      "affects": "all_agent_communication"
+    },
+    "individual_connection_toggles": {
+      "description": "Enable/disable specific agent connections",
+      "connections": [
+        "index_scraper → portfolio_optimizer",
+        "portfolio_optimizer → timing_advisor", 
+        "timing_advisor → compliance_logger",
+        "compliance_logger → portfolio_optimizer"
+      ]
+    },
+    "performance_monitoring": {
+      "real_time_metrics": true,
+      "connection_status": true,
+      "latency_tracking": true,
+      "success_rate_tracking": true
+    }
+  },
+  "benefits": {
+    "enhanced_accuracy": "Real-time data integration improves recommendation quality",
+    "timing_optimization": "Market timing analysis enhances entry/exit decisions", 
+    "compliance_automation": "Automated compliance checking reduces risk",
+    "system_coordination": "Agents work together for better outcomes"
+  },
+  "fallback_behavior": {
+    "a2a_disabled": "Agents operate in standalone mode with cached/mock data",
+    "connection_failure": "Graceful degradation with error handling",
+    "timeout_handling": "Fallback to last known good data after timeout"
+  }
+}

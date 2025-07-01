@@ -1,0 +1,66 @@
+{
+  "default_user": {
+    "user_id": "default_user",
+    "name": "Demo User",
+    "risk_tolerance": "medium",
+    "investment_horizon": "medium",
+    "budget": 50000,
+    "goals": "Growth",
+    "preferences": {
+      "sectors": ["technology", "healthcare", "finance"],
+      "exclude_sectors": ["tobacco", "gambling"],
+      "esg_focused": true,
+      "dividend_preference": false
+    },
+    "created_at": "2024-01-15T10:00:00Z",
+    "last_updated": "2024-01-15T10:00:00Z"
+  },
+  "conservative_user": {
+    "user_id": "conservative_user",
+    "name": "Conservative Investor",
+    "risk_tolerance": "low",
+    "investment_horizon": "long",
+    "budget": 100000,
+    "goals": "Income",
+    "preferences": {
+      "sectors": ["utilities", "consumer_staples", "healthcare"],
+      "exclude_sectors": ["crypto", "biotech", "energy"],
+      "esg_focused": true,
+      "dividend_preference": true
+    },
+    "created_at": "2024-01-15T10:00:00Z",
+    "last_updated": "2024-01-15T10:00:00Z"
+  },
+  "aggressive_user": {
+    "user_id": "aggressive_user",
+    "name": "Growth Investor",
+    "risk_tolerance": "high",
+    "investment_horizon": "short",
+    "budget": 25000,
+    "goals": "Aggressive Growth",
+    "preferences": {
+      "sectors": ["technology", "biotech", "renewable_energy"],
+      "exclude_sectors": ["utilities", "consumer_staples"],
+      "esg_focused": false,
+      "dividend_preference": false
+    },
+    "created_at": "2024-01-15T10:00:00Z",
+    "last_updated": "2024-01-15T10:00:00Z"
+  },
+  "balanced_user": {
+    "user_id": "balanced_user",
+    "name": "Balanced Investor",
+    "risk_tolerance": "medium",
+    "investment_horizon": "medium",
+    "budget": 75000,
+    "goals": "Balanced",
+    "preferences": {
+      "sectors": ["technology", "healthcare", "finance", "consumer_discretionary"],
+      "exclude_sectors": ["tobacco"],
+      "esg_focused": true,
+      "dividend_preference": true
+    },
+    "created_at": "2024-01-15T10:00:00Z",
+    "last_updated": "2024-01-15T10:00:00Z"
+  }
+}

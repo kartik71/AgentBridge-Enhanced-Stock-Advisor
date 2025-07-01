@@ -1,0 +1,508 @@
+{
+  "dependencies": [
+    "langchain",
+    "langgraph",
+    "langsmith"
+  ],
+  "graphs": {
+    "portfolio_optimizer_react_workflow": {
+      "title": "Portfolio Optimizer ReAct Agent Workflow",
+      "description": "LangGraph ReAct agent for portfolio optimization with reasoning traces and HITL support",
+      "nodes": [
+        {
+          "id": "analyze_inputs",
+          "type": "function",
+          "name": "AnalyzeInputs",
+          "description": "Validate and analyze user inputs (budget, timeframe, risk level)",
+          "function": "agents.portfolio_optimizer_react.agent.PortfolioOptimizerReActAgent._analyze_inputs"
+        },
+        {
+          "id": "fetch_market_data",
+          "type": "function",
+          "name": "FetchMarketData",
+          "description": "Retrieve current market data and sentiment from MCP servers",
+          "function": "agents.portfolio_optimizer_react.agent.PortfolioOptimizerReActAgent._fetch_market_data"
+        },
+        {
+          "id": "reason_about_strategy",
+          "type": "function",
+          "name": "ReasonAboutStrategy",
+          "description": "Apply ReAct reasoning to develop investment strategy based on market conditions",
+          "function": "agents.portfolio_optimizer_react.agent.PortfolioOptimizerReActAgent._reason_about_strategy"
+        },
+        {
+          "id": "generate_recommendations",
+          "type": "function",
+          "name": "GenerateRecommendations",
+          "description": "Generate stock recommendations using MCP recommendation server",
+          "function": "agents.portfolio_optimizer_react.agent.PortfolioOptimizerReActAgent._generate_recommendations"
+        },
+        {
+          "id": "optimize_portfolio",
+          "type": "function",
+          "name": "OptimizePortfolio",
+          "description": "Apply Modern Portfolio Theory to optimize asset allocation",
+          "function": "agents.portfolio_optimizer_react.agent.PortfolioOptimizerReActAgent._optimize_portfolio"
+        },
+        {
+          "id": "hitl_review",
+          "type": "function",
+          "name": "HITLReview",
+          "description": "Human-in-the-loop review for high-risk or large portfolios",
+          "function": "agents.portfolio_optimizer_react.agent.PortfolioOptimizerReActAgent._hitl_review"
+        },
+        {
+          "id": "finalize_portfolio",
+          "type": "function",
+          "name": "FinalizePortfolio",
+          "description": "Finalize portfolio recommendations and prepare output",
+          "function": "agents.portfolio_optimizer_react.agent.PortfolioOptimizerReActAgent._finalize_portfolio"
+        },
+        {
+          "id": "log_decision",
+          "type": "function",
+          "name": "LogDecision",
+          "description": "Log decision and reasoning trace to audit files (JSON/CSV)",
+          "function": "agents.portfolio_optimizer_react.agent.PortfolioOptimizerReActAgent._log_decision"
+        }
+      ],
+      "edges": [
+        {
+          "from": "analyze_inputs",
+          "to": "fetch_market_data",
+          "description": "Input validation complete, proceed to data collection"
+        },
+        {
+          "from": "fetch_market_data",
+          "to": "reason_about_strategy",
+          "description": "Market data retrieved, begin strategy reasoning"
+        },
+        {
+          "from": "reason_about_strategy",
+          "to": "generate_recommendations",
+          "description": "Strategy developed, generate stock recommendations"
+        },
+        {
+          "from": "generate_recommendations",
+          "to": "optimize_portfolio",
+          "description": "Recommendations ready, optimize portfolio allocation"
+        }
+      ],
+      "conditional_edges": [
+        {
+          "from": "optimize_portfolio",
+          "condition": "_should_require_hitl_approval",
+          "branches": {
+            "hitl_required": "hitl_review",
+            "no_hitl": "finalize_portfolio"
+          },
+          "description": "Check if human approval required based on risk/size criteria"
+        },
+        {
+          "from": "hitl_review",
+          "condition": "_check_hitl_approval",
+          "branches": {
+            "approved": "finalize_portfolio",
+            "rejected": "reason_about_strategy",
+            "pending": "END"
+          },
+          "description": "Process human approval decision"
+        }
+      ],
+      "entry_point": "analyze_inputs",
+      "configuration": {
+        "max_iterations": 10,
+        "timeout": 300,
+        "retry_policy": "exponential_backoff",
+        "hitl_timeout": 3600,
+        "audit_logging": true
+      }
+    },
+    "index_scraper_react_workflow": {
+      "title": "Index Scraper ReAct Agent Workflow",
+      "description": "LangGraph ReAct agent for market data collection with reasoning traces and HITL support",
+      "nodes": [
+        {
+          "id": "analyze_sources",
+          "type": "function",
+          "name": "AnalyzeSources",
+          "description": "Analyze and validate data sources for market data collection",
+          "function": "agents.index_scraper_react.agent.IndexScraperReActAgent._analyze_sources"
+        },
+        {
+          "id": "validate_connections",
+          "type": "function",
+          "name": "ValidateConnections",
+          "description": "Test connections to data sources and MCP servers",
+          "function": "agents.index_scraper_react.agent.IndexScraperReActAgent._validate_connections"
+        },
+        {
+          "id": "collect_current_data",
+          "type": "function",
+          "name": "CollectCurrentData",
+          "description": "Collect current market index data from sources",
+          "function": "agents.index_scraper_react.agent.IndexScraperReActAgent._collect_current_data"
+        },
+        {
+          "id": "fetch_historical_data",
+          "type": "function",
+          "name": "FetchHistoricalData",
+          "description": "Fetch historical data for trend analysis",
+          "function": "agents.index_scraper_react.agent.IndexScraperReActAgent._fetch_historical_data"
+        },
+        {
+          "id": "analyze_market_sentiment",
+          "type": "function",
+          "name": "AnalyzeMarketSentiment",
+          "description": "Analyze market sentiment indicators and overall assessment",
+          "function": "agents.index_scraper_react.agent.IndexScraperReActAgent._analyze_market_sentiment"
+        },
+        {
+          "id": "hitl_review",
+          "type": "function",
+          "name": "HITLReview",
+          "description": "Human review for unusual market conditions or data quality issues",
+          "function": "agents.index_scraper_react.agent.IndexScraperReActAgent._hitl_review"
+        },
+        {
+          "id": "finalize_data",
+          "type": "function",
+          "name": "FinalizeData",
+          "description": "Finalize collected market data and prepare output",
+          "function": "agents.index_scraper_react.agent.IndexScraperReActAgent._finalize_data"
+        },
+        {
+          "id": "log_collection",
+          "type": "function",
+          "name": "LogCollection",
+          "description": "Log data collection process to audit files",
+          "function": "agents.index_scraper_react.agent.IndexScraperReActAgent._log_collection"
+        }
+      ],
+      "conditional_edges": [
+        {
+          "from": "analyze_market_sentiment",
+          "condition": "_should_require_hitl_approval",
+          "branches": {
+            "hitl_required": "hitl_review",
+            "no_hitl": "finalize_data"
+          },
+          "description": "Check if human review required for extreme market conditions"
+        },
+        {
+          "from": "hitl_review",
+          "condition": "_check_hitl_approval",
+          "branches": {
+            "approved": "finalize_data",
+            "rejected": "collect_current_data",
+            "pending": "END"
+          },
+          "description": "Process human approval for data quality"
+        }
+      ],
+      "entry_point": "analyze_sources"
+    },
+    "timing_advisor_react_workflow": {
+      "title": "Timing Advisor ReAct Agent Workflow",
+      "description": "LangGraph ReAct agent for market timing analysis with reasoning traces and HITL support",
+      "nodes": [
+        {
+          "id": "analyze_timeframe",
+          "type": "function",
+          "name": "AnalyzeTimeframe",
+          "description": "Analyze and validate timeframe parameters for timing analysis",
+          "function": "agents.timing_advisor_react.agent.TimingAdvisorReActAgent._analyze_timeframe"
+        },
+        {
+          "id": "collect_market_data",
+          "type": "function",
+          "name": "CollectMarketData",
+          "description": "Collect market data for timing analysis",
+          "function": "agents.timing_advisor_react.agent.TimingAdvisorReActAgent._collect_market_data"
+        },
+        {
+          "id": "calculate_technical_indicators",
+          "type": "function",
+          "name": "CalculateTechnicalIndicators",
+          "description": "Calculate technical indicators (RSI, MACD, Moving Averages, etc.)",
+          "function": "agents.timing_advisor_react.agent.TimingAdvisorReActAgent._calculate_technical_indicators"
+        },
+        {
+          "id": "generate_timing_signals",
+          "type": "function",
+          "name": "GenerateTimingSignals",
+          "description": "Generate timing signals based on technical analysis",
+          "function": "agents.timing_advisor_react.agent.TimingAdvisorReActAgent._generate_timing_signals"
+        },
+        {
+          "id": "determine_market_regime",
+          "type": "function",
+          "name": "DetermineMarketRegime",
+          "description": "Determine current market regime (volatility, sentiment, trend)",
+          "function": "agents.timing_advisor_react.agent.TimingAdvisorReActAgent._determine_market_regime"
+        },
+        {
+          "id": "reason_about_timing",
+          "type": "function",
+          "name": "ReasonAboutTiming",
+          "description": "Apply ReAct reasoning to synthesize timing recommendations",
+          "function": "agents.timing_advisor_react.agent.TimingAdvisorReActAgent._reason_about_timing"
+        },
+        {
+          "id": "hitl_review",
+          "type": "function",
+          "name": "HITLReview",
+          "description": "Human review for extreme market conditions or conflicting signals",
+          "function": "agents.timing_advisor_react.agent.TimingAdvisorReActAgent._hitl_review"
+        },
+        {
+          "id": "finalize_recommendations",
+          "type": "function",
+          "name": "FinalizeRecommendations",
+          "description": "Finalize timing recommendations and risk advice",
+          "function": "agents.timing_advisor_react.agent.TimingAdvisorReActAgent._finalize_recommendations"
+        },
+        {
+          "id": "log_analysis",
+          "type": "function",
+          "name": "LogAnalysis",
+          "description": "Log timing analysis to audit files",
+          "function": "agents.timing_advisor_react.agent.TimingAdvisorReActAgent._log_analysis"
+        }
+      ],
+      "conditional_edges": [
+        {
+          "from": "reason_about_timing",
+          "condition": "_should_require_hitl_approval",
+          "branches": {
+            "hitl_required": "hitl_review",
+            "no_hitl": "finalize_recommendations"
+          },
+          "description": "Check if human review required for strong signals or extreme conditions"
+        },
+        {
+          "from": "hitl_review",
+          "condition": "_check_hitl_approval",
+          "branches": {
+            "approved": "finalize_recommendations",
+            "rejected": "generate_timing_signals",
+            "pending": "END"
+          },
+          "description": "Process human approval for timing analysis"
+        }
+      ],
+      "entry_point": "analyze_timeframe"
+    },
+    "compliance_logger_react_workflow": {
+      "title": "Compliance Logger ReAct Agent Workflow",
+      "description": "LangGraph ReAct agent for regulatory compliance with reasoning traces and HITL support",
+      "nodes": [
+        {
+          "id": "load_compliance_rules",
+          "type": "function",
+          "name": "LoadComplianceRules",
+          "description": "Load and validate compliance rules and regulations",
+          "function": "agents.compliance_logger_react.agent.ComplianceLoggerReActAgent._load_compliance_rules"
+        },
+        {
+          "id": "collect_portfolio_data",
+          "type": "function",
+          "name": "CollectPortfolioData",
+          "description": "Collect current portfolio data for compliance analysis",
+          "function": "agents.compliance_logger_react.agent.ComplianceLoggerReActAgent._collect_portfolio_data"
+        },
+        {
+          "id": "analyze_trade_orders",
+          "type": "function",
+          "name": "AnalyzeTradeOrders",
+          "description": "Analyze recent trade orders for compliance patterns",
+          "function": "agents.compliance_logger_react.agent.ComplianceLoggerReActAgent._analyze_trade_orders"
+        },
+        {
+          "id": "check_position_limits",
+          "type": "function",
+          "name": "CheckPositionLimits",
+          "description": "Check portfolio positions against compliance limits",
+          "function": "agents.compliance_logger_react.agent.ComplianceLoggerReActAgent._check_position_limits"
+        },
+        {
+          "id": "assess_risk_compliance",
+          "type": "function",
+          "name": "AssessRiskCompliance",
+          "description": "Assess portfolio risk compliance (VaR, drawdown, liquidity)",
+          "function": "agents.compliance_logger_react.agent.ComplianceLoggerReActAgent._assess_risk_compliance"
+        },
+        {
+          "id": "detect_violations",
+          "type": "function",
+          "name": "DetectViolations",
+          "description": "Detect and categorize all compliance violations",
+          "function": "agents.compliance_logger_react.agent.ComplianceLoggerReActAgent._detect_violations"
+        },
+        {
+          "id": "reason_about_compliance",
+          "type": "function",
+          "name": "ReasonAboutCompliance",
+          "description": "Apply ReAct reasoning about compliance status and recommendations",
+          "function": "agents.compliance_logger_react.agent.ComplianceLoggerReActAgent._reason_about_compliance"
+        },
+        {
+          "id": "hitl_review",
+          "type": "function",
+          "name": "HITLReview",
+          "description": "Human review for high-severity violations or poor compliance",
+          "function": "agents.compliance_logger_react.agent.ComplianceLoggerReActAgent._hitl_review"
+        },
+        {
+          "id": "finalize_compliance_report",
+          "type": "function",
+          "name": "FinalizeComplianceReport",
+          "description": "Finalize comprehensive compliance report",
+          "function": "agents.compliance_logger_react.agent.ComplianceLoggerReActAgent._finalize_compliance_report"
+        },
+        {
+          "id": "log_compliance_check",
+          "type": "function",
+          "name": "LogComplianceCheck",
+          "description": "Log compliance check to audit trail and violations log",
+          "function": "agents.compliance_logger_react.agent.ComplianceLoggerReActAgent._log_compliance_check"
+        }
+      ],
+      "conditional_edges": [
+        {
+          "from": "reason_about_compliance",
+          "condition": "_should_require_hitl_approval",
+          "branches": {
+            "hitl_required": "hitl_review",
+            "no_hitl": "finalize_compliance_report"
+          },
+          "description": "Check if human review required for compliance violations"
+        },
+        {
+          "from": "hitl_review",
+          "condition": "_check_hitl_approval",
+          "branches": {
+            "approved": "finalize_compliance_report",
+            "rejected": "detect_violations",
+            "pending": "END"
+          },
+          "description": "Process human approval for compliance status"
+        }
+      ],
+      "entry_point": "load_compliance_rules"
+    }
+  },
+  "mcp_servers": {
+    "index_server": {
+      "module": "mcp_servers.index_server",
+      "class": "IndexServer",
+      "port": 8001,
+      "description": "Real-time market index data provider"
+    },
+    "recommendation_server": {
+      "module": "mcp_servers.recommendation_server", 
+      "class": "RecommendationServer",
+      "port": 8002,
+      "description": "AI-powered portfolio recommendation engine"
+    },
+    "trading_server": {
+      "module": "mcp_servers.trading_server",
+      "class": "TradingServer", 
+      "port": 8003,
+      "description": "Simulated trade execution and compliance engine"
+    }
+  },
+  "react_agents_config": {
+    "portfolio_optimizer": {
+      "name": "PortfolioOptimizerReActAgent",
+      "description": "Portfolio optimization with Modern Portfolio Theory and HITL approval",
+      "hitl_criteria": {
+        "high_risk_threshold": 2.5,
+        "large_budget_threshold": 100000,
+        "min_diversification_score": 60
+      },
+      "audit_files": {
+        "json_log": "data/portfolio_optimizer_audit.json",
+        "csv_log": "data/portfolio_optimizer_decisions.csv"
+      }
+    },
+    "index_scraper": {
+      "name": "IndexScraperReActAgent",
+      "description": "Market data collection with quality assessment and HITL review",
+      "hitl_criteria": {
+        "extreme_sentiment_threshold": 80,
+        "high_volatility_threshold": 25,
+        "data_quality_threshold": 70
+      },
+      "audit_files": {
+        "json_log": "data/index_scraper_audit.json",
+        "csv_log": "data/index_scraper_decisions.csv"
+      }
+    },
+    "timing_advisor": {
+      "name": "TimingAdvisorReActAgent",
+      "description": "Market timing analysis with technical indicators and HITL review",
+      "hitl_criteria": {
+        "strong_signal_threshold": 0.5,
+        "extreme_conditions_threshold": 80,
+        "low_confidence_threshold": 60
+      },
+      "audit_files": {
+        "json_log": "data/timing_advisor_audit.json",
+        "csv_log": "data/timing_advisor_decisions.csv"
+      }
+    },
+    "compliance_logger": {
+      "name": "ComplianceLoggerReActAgent",
+      "description": "Regulatory compliance monitoring with violation detection and HITL review",
+      "hitl_criteria": {
+        "high_severity_violations": 1,
+        "compliance_score_threshold": 80,
+        "multiple_violation_types": 3
+      },
+      "audit_files": {
+        "json_log": "data/compliance_logger_audit.json",
+        "csv_log": "data/compliance_logger_decisions.csv",
+        "violations_log": "data/compliance_violations.json"
+      }
+    }
+  },
+  "environment": {
+    "python_version": "3.11+",
+    "required_packages": [
+      "langchain>=0.1.0",
+      "langgraph>=0.1.0",
+      "langsmith>=0.1.0",
+      "numpy>=1.24.0",
+      "pandas>=2.0.0",
+      "asyncio",
+      "aiohttp",
+      "pydantic>=2.0.0"
+    ]
+  },
+  "studio_config": {
+    "name": "Multi-Agent Stock Recommendation System",
+    "description": "Comprehensive LangGraph ReAct agents for stock analysis, portfolio optimization, market timing, and compliance monitoring",
+    "version": "1.0.0",
+    "author": "Stock Advisor Team",
+    "tags": ["portfolio", "react", "langgraph", "mcp", "hitl", "audit", "compliance", "timing", "market-data"],
+    "features": [
+      "ReAct reasoning pattern with explicit thought traces",
+      "Modern Portfolio Theory optimization",
+      "Technical analysis and market timing",
+      "Regulatory compliance monitoring",
+      "Human-in-the-loop approval workflows",
+      "Comprehensive audit logging (JSON + CSV)",
+      "MCP server integration for real-time data",
+      "Risk-based allocation and diversification",
+      "Market regime detection and analysis",
+      "Violation detection and remediation"
+    ],
+    "graph_visualization": {
+      "layout": "hierarchical",
+      "show_reasoning_traces": true,
+      "highlight_hitl_nodes": true,
+      "color_code_by_agent_type": true
+    }
+  }
+}
